@@ -1,34 +1,32 @@
 import pandas as pd
 import numpy as np
 import joblib
-from sklearn.model_selection import train_test_split
 import streamlit as st
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-
+# Load the model and vectorizer
 model = joblib.load("sentiment_analysis.pkl")
+vectorizer = joblib.load("vectorizer.pkl")
 
-# predicting values
+# Function to predict sentiment
 def predict(new_data):
     p = model.predict(new_data)
     return p
 
+# Streamlit input
+st.title("Sentiment Analysis Prediction")
+userText = st.text_input("Enter your text:")
 
-# taking the input as string from user
-userText = st.text_input("Enter your text: ")
-
-
-# input_data = np.array([userText])
-input_data = {'userText': userText}
-
-
-# converting the input_data into dataframe
-input_data = pd.DataFrame(input_data)
-
-
-
-
-# predict button 
+# Predict button
 if st.button("Predict"):
-    pre = predict(input_data)
-    # displaying the resutl
-    st.write(f"The predicted flower species is : {pre[0]}")
+    # Preprocess the input text using the vectorizer
+    processed_text = vectorizer.transform([userText])
+    
+    # Predict sentiment
+    prediction = predict(processed_text)
+    
+    # Map the prediction to sentiment
+    sentiment = "positive" if prediction[0] == 1 else "negative"
+    
+    # Display the result
+    st.write(f"The predicted sentiment is: {sentiment}")
