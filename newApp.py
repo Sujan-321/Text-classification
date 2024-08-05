@@ -1,3 +1,4 @@
+# url of this app in stramlit = https://textclassifications.streamlit.app/
 import pandas as pd
 import numpy as np
 import joblib
